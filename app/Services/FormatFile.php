@@ -40,10 +40,10 @@ class FormatFile
 
     //The hotel URL must be valid (please come up with a good definition of "valid").
     public static function formatUrl($str)
-    {                        
+    {     
         if (filter_var($str, FILTER_VALIDATE_URL)) 
         {  
-            return self::checkUrl($str);            
+            return self::checkUrl($str) ? $str : 0;            
         } 
         else 
         {
@@ -67,18 +67,20 @@ class FormatFile
     }
 
 
-    private static function checkUrl($url)
+    public static function checkUrl($url)
     {  
-        return $url;
+        $urlIsValid = false;
+        $file_headers = @get_headers($url);
 
-        #Disabled because performance problems
-        #check if a url is not returning 404
-        // $output = shell_exec("curl -s --max-time 1 --head $url | head -n 1");        
-        // if(strpos($output,"200 OK"))
-        // {
-        //     return $url;
-        // }
-        // return "0";
+        if(!$file_headers) {
+            $urlIsValid = false;
+        }
+        else {
+            if (strpos($file_headers[0], "200 OK")) {
+                $urlIsValid = true;
+            }
+        }
+
+        return $urlIsValid;
     }
-
 }

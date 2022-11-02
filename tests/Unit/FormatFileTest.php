@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Import;
 use App\Services\FormatFile;
+use App\Services\UrlInfo;
 
 class FormatFileTest extends TestCase
 {
@@ -84,34 +85,112 @@ class FormatFileTest extends TestCase
      * @return void
      */
     public function testIfUrlIsValid()
-    {   
-        $urls = [
-            "http://www.paucek.com/search.htm",
-            "http://www.farina.org/blog/categories/tags/about.html",
-            "http://www.garden.com/list/home.html",
-            "http://reichmann.de/main/",
-            "http://www.rousseau.fr/",
-            "http://the.com/register/",
-            "http://vaillant.com/list/app/faq/",
-            "http://www.begue.fr/search/register/",
-            "http://hotel.com/index/",
-            "http://premier.de/about/",
-            "http://ondricka.com/search/",
-            "http://the.org/category/",
-            "http://www.martini.net/main.asp",
-            "http://schneider.fr/index/",
-            "http://www.premier.com/login/",
-            "http://www.martinelli.net/",
-            "http://www.jockel.de/explore/tags/main/category.asp",
-            "http://www.lockman.info/main/",
-            "http://the.biz/",
-            "http://www.the.net/blog/category/tag/author/",
-            "http://www.hotel.com/index/",
-            "http://the.de/author/",
-            "http://benard.com/",
-        ];
+    {           
+        $urlsToCheck = array (
+            (object) [
+                "url"=> "http://www.paucek.com/search.htm",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.farina.org/blog/categories/tags/about.html",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.garden.com/list/home.html",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://reichmann.de/main/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.rousseau.fr/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://the.com/register/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://vaillant.com/list/app/faq/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.begue.fr/search/register/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://hotel.com/index/",
+                "isValid"=> false,
+            ],
+            
+            (object) [
+                "url"=> "http://premier.de/about/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "ttp://ondricka.com/search/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://the.org/category/",
+                "isValid"=> true,
+            ],
+            (object) [
+                "url"=> "http://www.martini.net/main.asp",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://schneider.fr/index/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.premier.com/login/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.martinelli.net/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.jockel.de/explore/tags/main/category.asp",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://www.lockman.info/main/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://the.biz/",
+                "isValid"=> true,
+            ],
+            //this one takes long time to execute
+            // (object) [
+            //     "url"=> "http://www.the.net/blog/category/tag/author/",
+            //     "isValid"=> false,
+            //],
+            (object) [
+                "url"=> "http://www.hotel.com/index/",
+                "isValid"=> false,
+            ],
+            (object) [
+                "url"=> "http://benard.com/",
+                "isValid"=> true,
+            ],
+            (object) [
+                "url"=> "https://the-red.de/",
+                "isValid"=> true,
+            ],
+        );
+
+        //to check url headers
+        //$uri_info = new UrlInfo($urlsToCheck[11]->url);
+        //print_r($uri_info->getHeader());
         
-        $this->assertTrue(true);
+
+        foreach ($urlsToCheck as $urls) {
+            $this->assertEquals($urls->isValid, FormatFile::checkUrl($urls->url));
+        }
     }
 
 
